@@ -6,7 +6,7 @@
 
 void IPv6::validateAddress(char *ip) {
 
-    //Przygotowanie tablicy przechowuj¹cej adres ip w pe³nej formie
+    //Przygotowanie tablicy przechowujÄ…cej adres ip w peÅ‚nej formie
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 4; j++) {
             this->charIpSegment[i][j] = '0';
@@ -14,23 +14,23 @@ void IPv6::validateAddress(char *ip) {
     }
     
     uint8_t x = 0;                                                                  //numer segmentu w tablicy char
-    bool inverseFlag = false;                                                       //flaga odpowiedzialna na odwrócenie analizy podanego adresu po znalezioniu ::
-    uint8_t doubleColonPos = 0;                                                     //numer pozycji w jakiej zosta³¹ znaleziona ::
-    char tempsegment[5] = {'0'};                                                    //tablica tymczasowa dla przechowania pojedyñczego segmentu adresu IP
-    int segmenti = 0;                                                               //numer komórki tablicy tymczasowej
+    bool inverseFlag = false;                                                       //flaga odpowiedzialna na odwrÃ³cenie analizy podanego adresu po znalezioniu ::
+    uint8_t doubleColonPos = 0;                                                     //numer pozycji w jakiej zostaÅ‚Ä… znaleziona ::
+    char tempsegment[5] = {'0'};                                                    //tablica tymczasowa dla przechowania pojedyÅ„czego segmentu adresu IP
+    int segmenti = 0;                                                               //numer komÃ³rki tablicy tymczasowej
 
     //analiza podanego adresu oraz podzielenie go na segmenty
     for (int i = 0; i < 39; i++) {
-        //gdy nie jest w podziale miêdzy segmentami
+        //gdy nie jest w podziale miÄ™dzy segmentami
         if (ip[i] != ':') {
             tempsegment[segmenti] = ip[i];
 
             segmenti++;
             
         }
-        //gdy kursor doszed³ do separatora segmentów
+        //gdy kursor doszedÅ‚ do separatora segmentÃ³w
         else {
-            //gdy zosta³ podany pe³ny segment XXXX
+            //gdy zostaÅ‚ podany peÅ‚ny segment XXXX
             if (segmenti == 4) {  
                 strcpy_s(this->charIpSegment[x], tempsegment);
                 tempsegment[0] = '0';
@@ -39,7 +39,7 @@ void IPv6::validateAddress(char *ip) {
                 tempsegment[3] = '0';
                 x++;
             }
-            else { //je¿eli nie to przepisanie z dodaniem nieznacz¹cych 0
+            else { //jeÅ¼eli nie to przepisanie z dodaniem nieznaczÄ…cych 0
                 int8_t segi = segmenti-1;
                 uint8_t y = 3;
                 while (segi >= 0) {
@@ -55,7 +55,7 @@ void IPv6::validateAddress(char *ip) {
                 
             }
             segmenti = 0;
-            if (ip[i + 1] == ':') {                                                 //gdy nastêpna komórka to ":" zapisaæ miejsce znaku, przygotowanie do analizy od koñca adresu IP oraz zakoñczenie tej instancji pêtli for
+            if (ip[i + 1] == ':') {                                                 //gdy nastÄ™pna komÃ³rka to ":" zapisaÄ‡ miejsce znaku, przygotowanie do analizy od koÅ„ca adresu IP oraz zakoÅ„czenie tej instancji pÄ™tli for
                 inverseFlag = true;
                 doubleColonPos = i + 1;
                 x = 7;
@@ -64,15 +64,15 @@ void IPv6::validateAddress(char *ip) {
         }
     }
 
-    //analiza od koñca adresu IP
+    //analiza od koÅ„ca adresu IP
     segmenti = 3;
-    for (int i = strlen(ip) - 1; i >= doubleColonPos; i--) {                        //pêtla for zaczynaj¹ca od ostaniego znaku w podanym ci¹gu
-        if (ip[i] != ':') {                                                         //je¿eli nie znak : to kopiuj to tymczasowej tablicy segmentu 
+    for (int i = strlen(ip) - 1; i >= doubleColonPos; i--) {                        //pÄ™tla for zaczynajÄ…ca od ostaniego znaku w podanym ciÄ…gu
+        if (ip[i] != ':') {                                                         //jeÅ¼eli nie znak : to kopiuj to tymczasowej tablicy segmentu 
             tempsegment[segmenti] = ip[i];
 
             segmenti--;
         }
-        else {                                                                      // je¿eli fa³sz skopiuj wartoœæ do tablicy finalnej oraz wyczyœæ.
+        else {                                                                      // jeÅ¼eli faÅ‚sz skopiuj wartoÅ›Ä‡ do tablicy finalnej oraz wyczyÅ›Ä‡.
             segmenti = 3;
             strcpy_s(this->charIpSegment[x], tempsegment);
             tempsegment[0] = '0';
@@ -86,13 +86,13 @@ void IPv6::validateAddress(char *ip) {
 }
 
 void IPv6::convertDecToBinMask() {
-    uint8_t numof16bitFF = this->netMask / 16;                                      //Dziesiêtna iloœæ segmentów maski zawieraj¹cych 0xFFFF
-    uint8_t numofbits = this->netMask - (numof16bitFF * 16);                        //iloœæ bitów maski uzupe³niaj¹cych do wartoœci
-    for (int i = 0; i < numof16bitFF; i++) {                                        //wype³nienie segmentów maski wartoœci 0xFFFF
+    uint8_t numof16bitFF = this->netMask / 16;                                      //DziesiÄ™tna iloÅ›Ä‡ segmentÃ³w maski zawierajÄ…cych 0xFFFF
+    uint8_t numofbits = this->netMask - (numof16bitFF * 16);                        //iloÅ›Ä‡ bitÃ³w maski uzupeÅ‚niajÄ…cych do wartoÅ›ci
+    for (int i = 0; i < numof16bitFF; i++) {                                        //wypeÅ‚nienie segmentÃ³w maski wartoÅ›ci 0xFFFF
         this->binaryNetMask[i] = 0xffff;
     }
 
-    for (uint8_t i = 0; i < 16; i++) {                                              //Pêtla uzupe³niaj¹ca s³owo[WORD] o pozosta³e bity maski oraz przsuwaj¹ca by znajdowa³y siê na swoim miejscu
+    for (uint8_t i = 0; i < 16; i++) {                                              //PÄ™tla uzupeÅ‚niajÄ…ca sÅ‚owo[WORD] o pozostaÅ‚e bity maski oraz przsuwajÄ…ca by znajdowaÅ‚y siÄ™ na swoim miejscu
         if (numofbits > 0) {
             numofbits--;
             this->binaryNetMask[numof16bitFF] = this->binaryNetMask[numof16bitFF] << 1;
@@ -106,7 +106,7 @@ void IPv6::convertDecToBinMask() {
 }
 
 uint8_t IPv6::asciiToHex(char c) {
-    if (c >= '0' && c <= '9') { //je¿eli podany znak jest z zakresu to od znaku odejmij wartoœæ najni¿szego znaku (interpretacja CHAR jako liczba dziesiêtna Tablica ASCII)
+    if (c >= '0' && c <= '9') { //jeÅ¼eli podany znak jest z zakresu to od znaku odejmij wartoÅ›Ä‡ najniÅ¼szego znaku (interpretacja CHAR jako liczba dziesiÄ™tna Tablica ASCII)
         return c - '0';
     }
     else if (c >= 'A' && c <= 'F') {
@@ -147,7 +147,7 @@ void IPv6::getShortAddress(uint16_t address[], char* output)
     uint8_t index = 0;
     char addrTemp[8][5] = { 0 };
 
-    // kopia pe³nego adresu do zmiennej tymczasowej
+    // kopia peÅ‚nego adresu do zmiennej tymczasowej
     for (uint8_t i = 0; i < 8; i++) {
         uint16_t tempbin = address[i];
 
@@ -158,28 +158,28 @@ void IPv6::getShortAddress(uint16_t address[], char* output)
 
     }
 
-    //wyszukanie miejsca w adresie gdzie znajduj¹ siê puste segmenty 0x0000
+    //wyszukanie miejsca w adresie gdzie znajdujÄ… siÄ™ puste segmenty 0x0000
     uint8_t start = 255, stop = 255;
+    bool nothingToDo = false;
     for (uint8_t i = 7; i > 0; i--) {
         if (address[i] == 0 && stop == 255) {
             stop = i;
             start = i;
         }
-        if ((address[i-1] == 0) && stop != 255) {
-            if (i > 1) {
-                if (address[i - 2] == 0) {
-                    start = i - 2;
-                }
-                else {
-                    break;
-                }
+        if (stop != 255) {
+            if (nothingToDo) continue;
+            if (address[i] == 0) {
+                    start = i;
             }
-            else { break; }
+            else { 
+                nothingToDo = true;
+                break; 
+            }
             
         }
     }
 
-    //wyczyszczenie adresu z nieznacz¹cych zer
+    //wyczyszczenie adresu z nieznaczÄ…cych zer
     for (uint8_t i = 0; i < 8; i++) {
         for (uint8_t j = 1; j < 4; j++) {
             if (addrTemp[i][0] == '0') {
@@ -191,16 +191,16 @@ void IPv6::getShortAddress(uint16_t address[], char* output)
         }
     }
     index = 0;
-    //tworzenie krótkiego adresu na podstawie danych
+    //tworzenie krÃ³tkiego adresu na podstawie danych
     for (uint8_t i = 0; i < 8; i++) { 
        
-        if (i >= start && i <= stop) {                              //gdy przek³adane s¹ segmenty puste nie wykonuje akcji. Gdy i == stop dodajnie znaku :    
+        if (i >= start && i <= stop) {                              //gdy przekÅ‚adane sÄ… segmenty puste nie wykonuje akcji. Gdy i == stop dodajnie znaku :    
             if (i == stop) {
                 output[index] = ':';
                 index++;
             }
         }
-        else {                                                      //je¿eli fa³sz to kopiuj wartoœæi z tablicy tymczasowej do wyjœciowego ci¹gu znakó
+        else {                                                      //jeÅ¼eli faÅ‚sz to kopiuj wartoÅ›Ä‡i z tablicy tymczasowej do wyjÅ›ciowego ciÄ…gu znakÃ³
             for (uint8_t j = 0; j < 4; j++) {
                 if (addrTemp[i][j] == '\0') {
                     break;
@@ -208,7 +208,7 @@ void IPv6::getShortAddress(uint16_t address[], char* output)
                 output[index] = addrTemp[i][j];
                 index++;
             }
-            if(i!=7) {                                              //dodaj znak : na koñcu segmentu (je¿eli nie ostatni)
+            if(i!=7) {                                              //dodaj znak : na koÅ„cu segmentu (jeÅ¼eli nie ostatni)
                 output[index] = ':';
                 index++;
             }
@@ -226,12 +226,15 @@ boost::multiprecision::uint128_t IPv6::getMaxClients()
     uint16_t output[8];
     boost::multiprecision::uint128_t value = 0;
     for (uint8_t i = 0; i < 8; i++) {
-        output[i] = 0xFFFF;                                 //nadanie segmentowy maksyaln¹ wartoœæ
-        output[i] = output[i] & ~this->binaryNetMask[i];    //operacja AND na wartoœci segmentu z odwrotnoœci¹ maski
-        value += output[i];                                 //dodanie wartoœci do liczby 128-bitowej
-        value = value << 16;                                //przesuniêcie o 16 bitó by w koñcowej fazie znalaz³y siê na odpowiednich miejscach
+        output[i] = 0xFFFF;                                 //nadanie segmentowy maksyalnÄ… wartoÅ›Ä‡
+        output[i] = output[i] & ~this->binaryNetMask[i];    //operacja AND na wartoÅ›ci segmentu z odwrotnoÅ›ciÄ… maski
+        value += output[i];                                 //dodanie wartoÅ›ci do liczby 128-bitowej
+        if(i!=7) {
+            value = value << 16;                                //przesuniÄ™cie o 16 bitÃ³ by w koÅ„cowej fazie znalazÅ‚y siÄ™ na odpowiednich miejscach
+        }
+        
     }
-    return value;
+    return value + 1;
 }
 
 void IPv6::convertCharToBinAddress()
@@ -374,8 +377,8 @@ void IPv6::diff3Address(char *address1, char *address2, char *address3) {
 
     for (uint8_t i = 0; i < maxLen; i++) {
         if(address1[i] != address2[i]) {
-            address1diffStart = i;
-            address2diffStart = i;
+            address1diffStart = i-1;
+            address2diffStart = i-1;
             break;
         }
     }
@@ -383,8 +386,8 @@ void IPv6::diff3Address(char *address1, char *address2, char *address3) {
     uint8_t tempaddr2 = address2Len;
     while(tempaddr1 != 0 || tempaddr2 != 0) {
         if(address1[tempaddr1] != address2[tempaddr2]) {
-            address1diffStop = tempaddr1;
-            address2diffStop = tempaddr2;
+            address1diffStop = tempaddr1+1;
+            address2diffStop = tempaddr2+1;
             break;
         }
         tempaddr1--;
@@ -400,10 +403,10 @@ void IPv6::diff3Address(char *address1, char *address2, char *address3) {
         }
     }
 
-    for (uint8_t i = address1Len; i >= address1diffStop + 1; i--) {
+    for (uint8_t i = address1Len+1; i >= address1diffStop ; i--) {
         address1[i + 1] = address1[i];
         if (i == address1diffStop + 1) {
-            address1[i+1] = ' ';
+            address1[i] = ' ';
             break;
         }
     }
@@ -411,8 +414,16 @@ void IPv6::diff3Address(char *address1, char *address2, char *address3) {
 
     for (uint8_t i = 0; i < maxLen; i++) {
         if (address3[i] != address2[i]) {
-            address3diffStart = i;
-            address2diffStart = i;
+            address3diffStart = i-1;
+            if(address2diffStart > i-1) {
+                address2diffStart = i - 1;
+                
+            } else {
+                if (address3diffStart > address2diffStart) {
+                    address3diffStart = address2diffStart;
+                }
+            }
+            
             break;
         }
     }
@@ -422,8 +433,8 @@ void IPv6::diff3Address(char *address1, char *address2, char *address3) {
     tempaddr2 = address2Len;
     while (tempaddr1 != 0 || tempaddr2 != 0) {
         if (address3[tempaddr1] != address2[tempaddr2]) {
-            address3diffStop = tempaddr1;
-            address2diffStop = tempaddr2;
+            address3diffStop = tempaddr1+1;
+            address2diffStop = tempaddr2+1;
             break;
         }
         tempaddr1--;
@@ -439,10 +450,10 @@ void IPv6::diff3Address(char *address1, char *address2, char *address3) {
         }
     }
 
-    for (uint8_t i = address3Len; i >= address3diffStop + 1; i--) {
+    for (uint8_t i = address3Len+1; i >= address3diffStop + 1; i--) {
         address3[i + 1] = address3[i];
         if (i == address3diffStop + 1) {
-            address3[i + 1] = ' ';
+            address3[i] = ' ';
             break;
         }
     }
@@ -456,10 +467,10 @@ void IPv6::diff3Address(char *address1, char *address2, char *address3) {
         }
     }
 
-    for (uint8_t i = address2Len; i >= address2diffStop + 1; i--) {
+    for (uint8_t i = address2Len+1; i >= address2diffStop + 1; i--) {
         address2[i + 1] = address2[i];
         if (i == address2diffStop + 1) {
-            address2[i + 1] = ' ';
+            address2[i] = ' ';
             break;
         }
     }
